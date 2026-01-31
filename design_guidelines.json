@@ -1,0 +1,141 @@
+{
+  "design_system": {
+    "typography": {
+      "font_family": {
+        "heading": "Playfair Display, serif",
+        "body": "Manrope, sans-serif",
+        "mono": "JetBrains Mono, monospace"
+      },
+      "import_url": "https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap",
+      "scale": {
+        "h1": "text-5xl md:text-7xl font-serif tracking-tight leading-tight",
+        "h2": "text-4xl md:text-5xl font-serif tracking-tight",
+        "h3": "text-2xl md:text-3xl font-serif",
+        "body_large": "text-lg md:text-xl font-sans font-light leading-relaxed",
+        "body_base": "text-base font-sans font-light leading-relaxed",
+        "caption": "text-xs uppercase tracking-[0.2em] font-sans font-medium text-muted-foreground"
+      }
+    },
+    "colors": {
+      "palette": {
+        "light": {
+          "background": "0 0% 98%",
+          "foreground": "0 0% 9%",
+          "primary": "0 0% 9%",
+          "primary_foreground": "0 0% 98%",
+          "secondary": "30 10% 96%",
+          "secondary_foreground": "0 0% 9%",
+          "muted": "30 10% 96%",
+          "muted_foreground": "0 0% 40%",
+          "accent": "30 20% 90%",
+          "accent_foreground": "0 0% 9%",
+          "border": "0 0% 90%"
+        },
+        "dark": {
+          "background": "0 0% 5%",
+          "foreground": "0 0% 95%",
+          "primary": "0 0% 98%",
+          "primary_foreground": "0 0% 9%",
+          "secondary": "0 0% 12%",
+          "secondary_foreground": "0 0% 98%",
+          "muted": "0 0% 12%",
+          "muted_foreground": "0 0% 60%",
+          "accent": "0 0% 15%",
+          "accent_foreground": "0 0% 98%",
+          "border": "0 0% 20%"
+        }
+      },
+      "usage": {
+        "primary_action": "bg-primary text-primary-foreground hover:bg-primary/90",
+        "secondary_action": "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        "outline_action": "border border-input bg-background hover:bg-accent hover:text-accent-foreground"
+      }
+    },
+    "spacing": {
+      "container": "container mx-auto px-4 md:px-8 lg:px-12 max-w-7xl",
+      "section_padding": "py-16 md:py-24 lg:py-32",
+      "element_gap": "gap-6 md:gap-12"
+    },
+    "visual_enhancers": {
+      "radius": "rounded-none",
+      "shadows": "none",
+      "borders": "border border-border/50",
+      "glass": "bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-border/10",
+      "animation": {
+        "fade_in": "animate-in fade-in duration-700 ease-out",
+        "slide_up": "animate-in slide-in-from-bottom-8 fade-in duration-700 ease-out",
+        "hover_lift": "transition-transform duration-300 hover:-translate-y-1"
+      }
+    }
+  },
+  "components": {
+    "buttons": {
+      "default": "h-12 px-8 rounded-none uppercase tracking-widest text-xs font-medium transition-all duration-300",
+      "primary": "bg-primary text-primary-foreground hover:bg-primary/90",
+      "ghost": "hover:bg-accent hover:text-accent-foreground"
+    },
+    "cards": {
+      "product": "group relative overflow-hidden bg-transparent border-none",
+      "feature": "p-8 border border-border/40 bg-background/50 backdrop-blur-sm"
+    },
+    "inputs": {
+      "default": "h-12 rounded-none border-border bg-transparent focus:ring-0 focus:border-primary transition-colors"
+    }
+  },
+  "layout_strategies": {
+    "hero": "Full-screen height (min-h-[90vh]), centered content, large serif typography, parallax background image.",
+    "product_grid": "Grid layout with 1 column (mobile), 2 (tablet), 4 (desktop). Large vertical gaps (gap-y-16). Minimal product info below image.",
+    "navigation": "Sticky header, glassmorphism. Logo centered or left. Minimal links. 'Shop' mega-menu.",
+    "footer": "Clean, 4-column grid. Large typography for 'Newsletter' section. Minimal social icons."
+  },
+  "image_urls": {
+    "hero": [
+      {
+        "url": "https://images.unsplash.com/photo-1705232497552-abd05ad64485?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2OTV8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBmYXNoaW9uJTIwbW9kZWwlMjBlZGl0b3JpYWx8ZW58MHx8fHwxNzY5ODM5MzI1fDA&ixlib=rb-4.1.0&q=85",
+        "description": "Woman with hat, editorial style - Primary Hero"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1759925847175-01d42373454b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2OTV8MHwxfHNlYXJjaHw0fHxsdXh1cnklMjBmYXNoaW9uJTIwbW9kZWwlMjBlZGl0b3JpYWx8ZW58MHx8fHwxNzY5ODM5MzI1fDA&ixlib=rb-4.1.0&q=85",
+        "description": "Woman in sheer black dress - Secondary Hero / Collection"
+      }
+    ],
+    "collections": [
+      {
+        "url": "https://images.unsplash.com/photo-1767334010488-83cdb8539273?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNTl8MHwxfHNlYXJjaHwxfHxtaW5pbWFsaXN0JTIwY2xvdGhpbmclMjByYWNrJTIwYm91dGlxdWV8ZW58MHx8fHwxNzY5ODM5MzI4fDA&ixlib=rb-4.1.0&q=85",
+        "description": "Mannequins in dimly lit store - Collection Cover"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1769107805528-964f4de0e342?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNTl8MHwxfHNlYXJjaHwyfHxtaW5pbWFsaXN0JTIwY2xvdGhpbmclMjByYWNrJTIwYm91dGlxdWV8ZW58MHx8fHwxNzY5ODM5MzI4fDA&ixlib=rb-4.1.0&q=85",
+        "description": "Cactus and white dresses - Summer Collection"
+      }
+    ],
+    "textures": [
+      {
+        "url": "https://images.unsplash.com/photo-1630961680768-998a170045fa?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHwxfHxmYWJyaWMlMjB0ZXh0dXJlJTIwc2lsayUyMGxpbmVuJTIwY2xvc2UlMjB1cHxlbnwwfHx8fDE3Njk4MzkzMzF8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Gold silk texture - Background Accent"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1619043519379-99df2736108d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHw0fHxmYWJyaWMlMjB0ZXh0dXJlJTIwc2lsayUyMGxpbmVuJTIwY2xvc2UlMjB1cHxlbnwwfHx8fDE3Njk4MzkzMzF8MA&ixlib=rb-4.1.0&q=85",
+        "description": "White silk texture - Subtle Background"
+      }
+    ]
+  },
+  "instructions_to_main_agent": [
+    "1. IMPORT FONTS: Add the Google Fonts import link to the top of /app/frontend/src/index.css immediately.",
+    "2. UPDATE TAILWIND: Update /app/frontend/tailwind.config.js to extend the font family with 'serif': ['Playfair Display', 'serif'] and 'sans': ['Manrope', 'sans-serif'].",
+    "3. UPDATE CSS VARIABLES: Replace the color variables in /app/frontend/src/index.css with the 'colors.palette' values defined in this JSON. Ensure 'radius' is set to '0rem' or '0.125rem' for that sharp luxury look.",
+    "4. COMPONENT OVERRIDES: When using Shadcn components (Buttons, Inputs, Cards), override the default rounded classes with 'rounded-none' or 'rounded-sm'.",
+    "5. LAYOUT: Use the 'container' class with 'max-w-7xl' for main content to ensure it doesn't stretch too wide on large screens, maintaining the editorial look.",
+    "6. IMAGES: Use the provided image URLs for the respective sections. Do not use placeholders.",
+    "7. ANIMATION: Apply 'animate-in fade-in slide-in-from-bottom-4' to all major sections as they scroll into view.",
+    "8. NAVIGATION: Implement a sticky header with the 'glass' style defined in visual_enhancers.",
+    "9. TESTING: Add data-testid attributes to all interactive elements (buttons, links, inputs) as requested."
+  ],
+  "universal_guidelines": [
+    "Avoid gradients for backgrounds; use solid colors or subtle textures.",
+    "Use 2-3x more whitespace than typical SaaS apps.",
+    "Typography hierarchy is key: Big Serif Headings vs Small Sans Body.",
+    "No 'pill' shaped buttons; stick to sharp or slightly rounded rectangles.",
+    "All interactive elements must have a hover state (opacity change or underline)."
+  ]
+}
