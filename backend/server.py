@@ -396,7 +396,7 @@ async def get_admin_stats(admin: User = Depends(get_admin_user)):
     }
 
 async def init_admin():
-    admin_email = "Admin@login"
+    admin_email = "admin@luxe.com"
     existing_admin = await db.users.find_one({"email": admin_email})
     
     if not existing_admin:
@@ -408,7 +408,7 @@ async def init_admin():
         admin_doc = admin_user.model_dump()
         admin_doc["password"] = hash_password("Admin123")
         await db.users.insert_one(admin_doc)
-        logging.info("Admin user created")
+        logging.info(f"Admin user created with email: {admin_email} and password: Admin123")
 
 async def init_sample_data():
     product_count = await db.products.count_documents({})
