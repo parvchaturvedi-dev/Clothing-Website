@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, register } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -24,13 +24,11 @@ const Login = () => {
       if (isLogin) {
         await login(formData.email, formData.password);
         toast.success('Welcome back!');
-        navigate('/dashboard');
       } else {
-        const { register: registerUser } = require('../contexts/AuthContext');
-        await registerUser(formData);
+        await register(formData);
         toast.success('Account created successfully!');
-        navigate('/dashboard');
       }
+      navigate('/dashboard');
     } catch (error) {
       const message = error.response?.data?.detail || (isLogin ? 'Login failed' : 'Registration failed');
       toast.error(message);
