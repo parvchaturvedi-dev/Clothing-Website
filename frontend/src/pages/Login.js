@@ -24,12 +24,13 @@ const Login = () => {
       if (isLogin) {
         await login(formData.email, formData.password);
         toast.success('Welcome back!');
+        navigate('/dashboard');
       } else {
-        const { register } = await import('../contexts/AuthContext');
-        await register(formData);
+        const { register: registerUser } = require('../contexts/AuthContext');
+        await registerUser(formData);
         toast.success('Account created successfully!');
+        navigate('/dashboard');
       }
-      navigate('/dashboard');
     } catch (error) {
       const message = error.response?.data?.detail || (isLogin ? 'Login failed' : 'Registration failed');
       toast.error(message);
