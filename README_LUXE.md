@@ -122,7 +122,7 @@ LUXE is a sophisticated, luxury fashion e-commerce website with an enquiry-only 
 1. Browse products on homepage or products page
 2. Use search and filters to find specific items
 3. View product details
-4. Create account or login
+4. Create account or login (with forgot password option)
 5. Add items to wishlist or cart
 6. Submit enquiry for purchase
 7. Track enquiries in dashboard
