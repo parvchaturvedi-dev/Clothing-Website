@@ -30,6 +30,7 @@ LUXE is a sophisticated, luxury fashion e-commerce website with an enquiry-only 
 3. **Authentication**
    - User registration with email/password
    - Secure login system
+   - Forgot password functionality
    - Protected routes for authenticated users
 
 4. **Customer Dashboard**
