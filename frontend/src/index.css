@@ -15,6 +15,17 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+/* Hide Emergent badge */
+[class*="emergent"],
+[id*="emergent"],
+a[href*="emergent.sh"],
+img[alt*="emergent"],
+div[style*="z-index: 2147483647"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
 @layer base {
     :root {
         --background: 0 0% 98%;
