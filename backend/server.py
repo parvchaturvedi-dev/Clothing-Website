@@ -52,11 +52,10 @@ class UserLogin(BaseModel):
 
 class ForgotPasswordRequest(BaseModel):
     email: EmailStr
-
-class ResetPasswordRequest(BaseModel):
-    email: EmailStr
+    phone: str
+    first_letter: str
     new_password: str
-    reset_code: str
+    confirm_password: str
 
 class Token(BaseModel):
     access_token: str
@@ -121,11 +120,16 @@ class Enquiry(BaseModel):
     status: str = "pending"
     user_name: str
     user_email: str
+    admin_reply: Optional[str] = None
+    replied_at: Optional[str] = None
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 class EnquiryCreate(BaseModel):
     product_id: Optional[str] = None
     message: str
+
+class EnquiryReply(BaseModel):
+    reply: str
 
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
@@ -203,62 +207,34 @@ async def get_me(current_user: User = Depends(get_current_user)):
 
 @api_router.post("/auth/forgot-password")
 async def forgot_password(request: ForgotPasswordRequest):
+    # Validate new password matches confirm password
+    if request.new_password != request.confirm_password:
+        raise HTTPException(status_code=400, detail="Passwords do not match")
+    
+    if len(request.new_password) < 6:
+        raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
+    
+    # Find user with matching email
     user = await db.users.find_one({"email": request.email})
     if not user:
-        # Don't reveal if user exists for security
-        return {"message": "If the email exists, password reset instructions have been sent"}
+        raise HTTPException(status_code=400, detail="Invalid credentials")
     
-    # Generate a simple reset code (in production, use proper token generation and email)
-    reset_code = str(uuid.uuid4())[:8]
+    # Verify phone number
+    if user.get("phone") != request.phone:
+        raise HTTPException(status_code=400, detail="Invalid credentials")
     
-    # Store reset code in database with expiration
-    await db.password_resets.update_one(
-        {"email": request.email},
-        {
-            "$set": {
-                "reset_code": reset_code,
-                "created_at": datetime.now(timezone.utc).isoformat(),
-                "expires_at": (datetime.now(timezone.utc) + timedelta(hours=1)).isoformat()
-            }
-        },
-        upsert=True
-    )
+    # Verify first letter of name (lowercase)
+    if user.get("name", "")[0].lower() != request.first_letter.lower():
+        raise HTTPException(status_code=400, detail="Invalid credentials")
     
-    # In production, send email with reset link
-    # For now, just return success message
-    logging.info(f"Password reset requested for {request.email}, reset code: {reset_code}")
-    
-    return {"message": "If the email exists, password reset instructions have been sent"}
-
-@api_router.post("/auth/reset-password")
-async def reset_password(request: ResetPasswordRequest):
-    # Check if reset code is valid
-    reset_request = await db.password_resets.find_one({"email": request.email})
-    
-    if not reset_request:
-        raise HTTPException(status_code=400, detail="Invalid or expired reset code")
-    
-    if reset_request["reset_code"] != request.reset_code:
-        raise HTTPException(status_code=400, detail="Invalid reset code")
-    
-    # Check if code has expired
-    expires_at = datetime.fromisoformat(reset_request["expires_at"])
-    if datetime.now(timezone.utc) > expires_at:
-        raise HTTPException(status_code=400, detail="Reset code has expired")
-    
-    # Update user password
+    # Update password
     hashed_password = hash_password(request.new_password)
-    result = await db.users.update_one(
+    await db.users.update_one(
         {"email": request.email},
         {"$set": {"password": hashed_password}}
     )
     
-    if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    # Delete used reset code
-    await db.password_resets.delete_one({"email": request.email})
-    
+    logging.info(f"Password reset successful for {request.email}")
     return {"message": "Password has been reset successfully"}
 
 @api_router.get("/products", response_model=List[Product])
@@ -444,6 +420,24 @@ async def get_all_enquiries(admin: User = Depends(get_admin_user)):
     enquiries = await db.enquiries.find({}, {"_id": 0}).sort("created_at", -1).to_list(1000)
     return [Enquiry(**e) for e in enquiries]
 
+@api_router.post("/admin/enquiries/{enquiry_id}/reply")
+async def reply_to_enquiry(enquiry_id: str, reply_data: EnquiryReply, admin: User = Depends(get_admin_user)):
+    result = await db.enquiries.update_one(
+        {"id": enquiry_id},
+        {
+            "$set": {
+                "admin_reply": reply_data.reply,
+                "replied_at": datetime.now(timezone.utc).isoformat(),
+                "status": "replied"
+            }
+        }
+    )
+    
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Enquiry not found")
+    
+    return {"message": "Reply sent successfully"}
+
 @api_router.get("/admin/users", response_model=List[User])
 async def get_all_users(admin: User = Depends(get_admin_user)):
     users = await db.users.find({}, {"_id": 0, "password": 0}).to_list(1000)
@@ -471,6 +465,7 @@ async def init_admin():
         admin_user = User(
             email=admin_email,
             name="Administrator",
+            phone="1234567890",
             role="admin"
         )
         admin_doc = admin_user.model_dump()
