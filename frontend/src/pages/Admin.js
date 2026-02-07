@@ -178,26 +178,6 @@ const Admin = () => {
     }
   };
 
-  const handleReplyToEnquiry = async (enquiryId) => {
-    const replyText = document.getElementById(`reply-${enquiryId}`).value.trim();
-    if (!replyText) {
-      toast.error('Please enter a reply message');
-      return;
-    }
-
-    try {
-      await axios.post(`${API}/admin/enquiries/${enquiryId}/reply`, {
-        reply: replyText
-      });
-      toast.success('Reply sent successfully');
-      fetchEnquiries();
-      fetchStats();
-    } catch (error) {
-      console.error('Failed to send reply:', error);
-      toast.error('Failed to send reply');
-    }
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
