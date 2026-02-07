@@ -104,13 +104,31 @@ const Dashboard = () => {
                         })}
                       </p>
                       <span className={`inline-block px-3 py-1 text-xs uppercase tracking-widest ${
-                        enquiry.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
+                        enquiry.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : enquiry.status === 'replied' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
                       }`}>
                         {enquiry.status}
                       </span>
                     </div>
                   </div>
-                  <p className="text-sm">{enquiry.message}</p>
+                  <div className="mb-3">
+                    <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">Your Message:</p>
+                    <p className="text-sm">{enquiry.message}</p>
+                  </div>
+                  {enquiry.admin_reply && (
+                    <div className="mt-4 p-4 bg-accent/30 border-l-4 border-primary">
+                      <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">Admin Reply:</p>
+                      <p className="text-sm">{enquiry.admin_reply}</p>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        Replied: {new Date(enquiry.replied_at).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </p>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
