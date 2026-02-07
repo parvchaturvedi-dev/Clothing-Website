@@ -355,15 +355,56 @@ const Admin = () => {
                     </div>
                     <div>
                       <span className={`inline-block px-3 py-1 text-xs uppercase tracking-widest ${
-                        enquiry.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
+                        enquiry.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : enquiry.status === 'replied' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
                       }`}>
                         {enquiry.status}
                       </span>
                     </div>
                   </div>
-                  <p className="text-sm mb-3">{enquiry.message}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {new Date(enquiry.created_at).toLocaleDateString('en-US', {
+                  <div className="mb-3">
+                    <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">Customer Message:</p>
+                    <p className="text-sm">{enquiry.message}</p>
+                  </div>
+                  
+                  {enquiry.admin_reply && (
+                    <div className="mb-3 p-4 bg-accent/30 border-l-4 border-primary">
+                      <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">Your Reply:</p>
+                      <p className="text-sm">{enquiry.admin_reply}</p>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        Replied: {new Date(enquiry.replied_at).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </p>
+                    </div>
+                  )}
+                  
+                  {!enquiry.admin_reply && (
+                    <div className="mt-4">
+                      <label className="block text-xs uppercase tracking-widest mb-2">Reply to Customer</label>
+                      <textarea
+                        rows={3}
+                        className="w-full px-3 py-2 border border-border bg-transparent focus:outline-none focus:border-primary resize-none mb-2"
+                        placeholder="Type your reply here..."
+                        data-testid={`reply-textarea-${enquiry.id}`}
+                        id={`reply-${enquiry.id}`}
+                      />
+                      <Button
+                        onClick={() => handleReplyToEnquiry(enquiry.id)}
+                        size="sm"
+                        className="rounded-none uppercase tracking-widest text-xs"
+                        data-testid={`send-reply-${enquiry.id}`}
+                      >
+                        Send Reply
+                      </Button>
+                    </div>
+                  )}
+                  
+                  <p className="text-xs text-muted-foreground mt-3">
+                    Submitted: {new Date(enquiry.created_at).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric',
