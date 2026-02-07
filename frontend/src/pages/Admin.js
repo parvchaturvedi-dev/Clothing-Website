@@ -158,6 +158,27 @@ const Admin = () => {
   };
 
   const handleReplyToEnquiry = async (enquiryId) => {
+    const textarea = document.getElementById(`reply-${enquiryId}`);
+    const reply = textarea?.value?.trim();
+    
+    if (!reply) {
+      toast.error('Please enter a reply message');
+      return;
+    }
+    
+    try {
+      await axios.post(`${API}/admin/enquiries/${enquiryId}/reply`, { reply });
+      toast.success('Reply sent successfully');
+      textarea.value = '';
+      fetchEnquiries();
+      fetchStats();
+    } catch (error) {
+      console.error('Failed to send reply:', error);
+      toast.error('Failed to send reply');
+    }
+  };
+
+  const handleReplyToEnquiry = async (enquiryId) => {
     const replyText = document.getElementById(`reply-${enquiryId}`).value.trim();
     if (!replyText) {
       toast.error('Please enter a reply message');
