@@ -3,6 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
+import axios from 'axios';
+
+const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const Login = () => {
   const navigate = useNavigate();
@@ -16,7 +19,13 @@ const Login = () => {
     name: '',
     phone: ''
   });
-  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotPasswordData, setForgotPasswordData] = useState({
+    email: '',
+    phone: '',
+    first_letter: '',
+    new_password: '',
+    confirm_password: ''
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,17 +48,28 @@ const Login = () => {
     }
   };
 
-  const handleForgotPassword = (e) => {
+  const handleForgotPassword = async (e) => {
     e.preventDefault();
-    if (!forgotEmail) {
-      toast.error('Please enter your email address');
-      return;
+    setLoading(true);
+
+    try {
+      await axios.post(`${API}/auth/forgot-password`, forgotPasswordData);
+      toast.success('Password reset successfully!');
+      setShowForgotPassword(false);
+      setForgotPasswordData({
+        email: '',
+        phone: '',
+        first_letter: '',
+        new_password: '',
+        confirm_password: ''
+      });
+      toast.info('You can now login with your new password');
+    } catch (error) {
+      const message = error.response?.data?.detail || 'Failed to reset password';
+      toast.error(message);
+    } finally {
+      setLoading(false);
     }
-    // For now, just show a message since we don't have email integration
-    toast.success('Password reset instructions will be sent to ' + forgotEmail);
-    toast.info('Please contact our support team at contact@luxe.com for immediate assistance');
-    setShowForgotPassword(false);
-    setForgotEmail('');
   };
 
   if (showForgotPassword) {
@@ -59,10 +79,10 @@ const Login = () => {
           <div className="max-w-md mx-auto">
             <div className="text-center mb-8">
               <h1 className="text-4xl md:text-5xl font-serif tracking-tight mb-4" data-testid="forgot-password-title">
-                Forgot Password
+                Reset Password
               </h1>
               <p className="text-sm text-muted-foreground">
-                Enter your email address and we'll send you instructions to reset your password
+                Enter your details to reset your password
               </p>
             </div>
 
@@ -72,8 +92,8 @@ const Login = () => {
                   <label className="block text-xs uppercase tracking-widest mb-2">Email Address *</label>
                   <input
                     type="email"
-                    value={forgotEmail}
-                    onChange={(e) => setForgotEmail(e.target.value)}
+                    value={forgotPasswordData.email}
+                    onChange={(e) => setForgotPasswordData({ ...forgotPasswordData, email: e.target.value })}
                     required
                     className="w-full h-12 px-4 border border-border bg-transparent focus:outline-none focus:border-primary transition-colors"
                     placeholder="your@email.com"
@@ -81,12 +101,68 @@ const Login = () => {
                   />
                 </div>
 
+                <div>
+                  <label className="block text-xs uppercase tracking-widest mb-2">Registered Mobile Number *</label>
+                  <input
+                    type="tel"
+                    value={forgotPasswordData.phone}
+                    onChange={(e) => setForgotPasswordData({ ...forgotPasswordData, phone: e.target.value })}
+                    required
+                    className="w-full h-12 px-4 border border-border bg-transparent focus:outline-none focus:border-primary transition-colors"
+                    placeholder="1234567890"
+                    data-testid="forgot-password-phone-input"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase tracking-widest mb-2">First Letter of Name (lowercase) *</label>
+                  <input
+                    type="text"
+                    value={forgotPasswordData.first_letter}
+                    onChange={(e) => setForgotPasswordData({ ...forgotPasswordData, first_letter: e.target.value.toLowerCase() })}
+                    required
+                    maxLength={1}
+                    className="w-full h-12 px-4 border border-border bg-transparent focus:outline-none focus:border-primary transition-colors"
+                    placeholder="a"
+                    data-testid="forgot-password-first-letter-input"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase tracking-widest mb-2">New Password *</label>
+                  <input
+                    type="password"
+                    value={forgotPasswordData.new_password}
+                    onChange={(e) => setForgotPasswordData({ ...forgotPasswordData, new_password: e.target.value })}
+                    required
+                    minLength={6}
+                    className="w-full h-12 px-4 border border-border bg-transparent focus:outline-none focus:border-primary transition-colors"
+                    placeholder="Min 6 characters"
+                    data-testid="forgot-password-new-password-input"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase tracking-widest mb-2">Confirm New Password *</label>
+                  <input
+                    type="password"
+                    value={forgotPasswordData.confirm_password}
+                    onChange={(e) => setForgotPasswordData({ ...forgotPasswordData, confirm_password: e.target.value })}
+                    required
+                    minLength={6}
+                    className="w-full h-12 px-4 border border-border bg-transparent focus:outline-none focus:border-primary transition-colors"
+                    placeholder="Confirm password"
+                    data-testid="forgot-password-confirm-password-input"
+                  />
+                </div>
+
                 <Button
                   type="submit"
+                  disabled={loading}
                   className="w-full h-12 rounded-none uppercase tracking-widest text-xs"
                   data-testid="forgot-password-submit"
                 >
-                  Send Reset Instructions
+                  {loading ? 'Resetting...' : 'Reset Password'}
                 </Button>
               </form>
 
@@ -94,20 +170,19 @@ const Login = () => {
                 <button
                   onClick={() => {
                     setShowForgotPassword(false);
-                    setForgotEmail('');
+                    setForgotPasswordData({
+                      email: '',
+                      phone: '',
+                      first_letter: '',
+                      new_password: '',
+                      confirm_password: ''
+                    });
                   }}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   data-testid="back-to-login"
                 >
                   Back to Login
                 </button>
-              </div>
-
-              <div className="mt-6 p-4 bg-accent/30 border border-border">
-                <p className="text-xs text-muted-foreground">
-                  Need immediate help? Contact our support team at{' '}
-                  <a href="mailto:contact@luxe.com" className="underline">contact@luxe.com</a>
-                </p>
               </div>
             </div>
           </div>
@@ -159,12 +234,14 @@ const Login = () => {
 
               {!isLogin && (
                 <div>
-                  <label className="block text-xs uppercase tracking-widest mb-2">Phone</label>
+                  <label className="block text-xs uppercase tracking-widest mb-2">Phone *</label>
                   <input
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    required={!isLogin}
                     className="w-full h-12 px-4 border border-border bg-transparent focus:outline-none focus:border-primary transition-colors"
+                    placeholder="Required for password reset"
                     data-testid="phone-input"
                   />
                 </div>
